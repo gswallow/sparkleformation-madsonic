@@ -1,0 +1,3 @@
+s3fs_bucket_name: "{{ lookup('env', 'S3FS_BUCKET_NAME') }}"
+s3fs_aws_region: "{{ lookup('env', 'S3FS_AWS_REGION') }}"
+s3fs_iam_role: "{{ lokup('env', 'S3FS_IAM_ROLE') }}"
