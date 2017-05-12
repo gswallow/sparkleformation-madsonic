@@ -4,7 +4,7 @@ SfnRegistry.register(:ansible_seed) do |_name, _config = {}|
     'ANSIBLE_REMOTE_TEMP'             => '$HOME/.ansible/tmp',
     'SUBSONIC_VERSION'                => ref!(:subsonic_version),
     'SUBSONIC_LICENSE_KEY'            => ref!(:subsonic_license_key),
-    'SUBSONIC_S3_BUCKET'              => ref!(:subsonic_s3_bucket),
+    'SUBSONIC_S3_BUCKET_NAME'         => ref!(:subsonic_s3_bucket_name),
     'HOSTGROUP'                       => 'default'
   }
 end

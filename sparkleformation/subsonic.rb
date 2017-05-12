@@ -43,7 +43,7 @@ EOF
     constraint_description 'can only contain ASCII characters'
   end
 
-  parameters(:subsonic_s3_bucket) do
+  parameters(:subsonic_s3_bucket_name) do
     type 'String'
     default ENV.fetch('SUBSONIC_S3_BUCKET', "#{ENV['USER']}-subsonic")
     allowed_pattern "[\\x20-\\x7E]*"
@@ -60,7 +60,7 @@ EOF
           )
 
   # S3 bucket and bucket policy allowing access to IAM roles
-  dynamic!(:bucket, 'subsonic', :name => ref!(:subsonic_s3_bucket))
+  dynamic!(:bucket, 'subsonic', :bucket_name => ref!(:subsonic_s3_bucket_name))
   dynamic!(:bucket_policy, 'subsonic')
 
   # IAM roles
