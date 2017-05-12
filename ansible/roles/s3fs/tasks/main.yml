@@ -1,3 +1,17 @@
+- name: create subsonic group
+  group:
+    name: subsonic
+    system: yes
+
+- name: create subsonic user
+  user:
+    name: subsonic
+    comment: "Subsonic user"
+    group: subsonic
+    system: yes
+    state: present
+  register: subsonic_user
+
 - name: install s3fs package
   apt:
     name: s3fs
@@ -14,5 +28,5 @@
     path: /s3fs/subsonic
     src: "{{ s3fs_bucket_name }}:/"
     fstype: fuse.s3fs
-    opts: "_netdev,storage_class=standard_ia,iam_role={{ s3fs_iam_role }},endpoint={{ s3fs_aws_region }}"
+    opts: "_netdev,storage_class=standard_ia,iam_role={{ s3fs_iam_role }},endpoint={{ s3fs_aws_region }},user_id={{ subsonic_user.uid }},use_cache=/tmp/s3cache"
     state: mounted
