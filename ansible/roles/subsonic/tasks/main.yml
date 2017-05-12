@@ -1,1 +1,18 @@
-- shell: "echo i am here"
+- name: create subsonic group
+  group:
+    name: subsonic
+
+- name: create subsonic user
+  user:
+    name: subsonic
+    comment: "Subsonic user"
+    group: subsonic
+    system: yes
+    state: present
+
+- name: change s3fs mountpoint owner
+  file:
+    path: /s3fs/subsonic
+    owner: subsonic
+    group: subsonic
+    state: directory
