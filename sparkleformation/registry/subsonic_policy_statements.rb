@@ -7,7 +7,7 @@ SfnRegistry.register(:subsonic_policy_statements) do
     },
     {
       'Action' =>  %w(s3:ListBucket),
-      'Resource' => join!( 'arn', 'aws', 's3', '', '', ref!(:subsonic_s3_bucket), :options => { :delimiter => ':' })
+      'Resource' => join!( 'arn', 'aws', 's3', '', '', ref!(:subsonic_s3_bucket), :options => { :delimiter => ':' }),
       'Effect' =>  'Allow'
     },
     {

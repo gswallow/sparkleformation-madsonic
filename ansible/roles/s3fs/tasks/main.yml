@@ -1,1 +1,1 @@
-- shell: "echo i am here"
+- apt: name=s3fs
