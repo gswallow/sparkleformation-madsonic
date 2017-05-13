@@ -1,1 +1,34 @@
-- shell: echo here i am
+- name: install subsonic package
+  apt:
+    deb: "https://s3-eu-west-1.amazonaws.com/subsonic-public/download/subsonic-{{ subsonic_version }}.deb"
+    allow_unauthenticated: yes
+    state: present
+
+- lineinfile:
+    line: "SUBSONIC_USER='subsonic'"
+    dest: "/etc/default/subsonic"
+    regexp: '^SUBSONIC_USER'
+  notify:
+    - restart subsonic
+
+- lineinfile:
+    line: "SUBSONIC_ARGS='--max-memory=150 --default-music-folder=/s3fs/subsonic/music --default-podcast-folder=/s3fs/subsonic/podcasts --default-playlist-folder=/s3fs/subsonic/playlists'"
+    dest: "/etc/default/subsonic"
+    regexp: '^SUBSONIC_ARGS'
+  notify:
+    - restart subsonic
+
+- name: restart subsonic
+  service:
+    name: subsonic
+    state: restarted
+    enabled: yes
+
+- lineinfile:
+    line: "LicenseCode={{ subsonic_license_key }}"
+    dest: '/var/subsonic/subsonic.properties'
+    regexp: '^LicenseCode'
+    insertafter: EOF
+    create: yes
+  notify:
+    - restart subsonic

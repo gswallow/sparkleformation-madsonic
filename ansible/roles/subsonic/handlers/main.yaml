@@ -1,0 +1,5 @@
+- name: restart subsonic
+  service:
+    name: subsonic
+    state: restarted
+    enabled: yes

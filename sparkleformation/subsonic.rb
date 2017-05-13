@@ -26,10 +26,18 @@ EOF
     description 'Network from which to allow SSH.  Note the default of 127.0.0.1/32 effectively disables SSH access.'
     constraint_description 'Must follow IP/mask notation (e.g. 192.168.1.0/24)'
   end
+  
+  parameters(:allow_subsonic_from) do
+    type 'String'
+    allowed_pattern "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    default '0.0.0.0/0'
+    description 'Network from which to allow Subsonic (TCP 4040).  Note the default of 0.0.0.0/0 allows global access.'
+    constraint_description 'Must follow IP/mask notation (e.g. 192.168.1.0/24)'
+  end
 
   parameters(:subsonic_version) do
     type 'String'
-    default ENV.fetch('SUBSONIC_VERSION', '6.0')
+    default ENV.fetch('SUBSONIC_VERSION', '6.1.beta2')
     allowed_pattern "[\\x20-\\x7E]*"
     description 'Version of Subsonic to install'
     constraint_description 'can only contain ASCII characters'
@@ -37,24 +45,23 @@ EOF
 
   parameters(:subsonic_license_key) do
     type 'String'
-    default ENV.fetch('SUBSONIC_LICENSE_KEY', 'not_found')
+    default ENV.fetch('SUBSONIC_LICENSE_KEY', '')
     allowed_pattern "[\\x20-\\x7E]*"
-    description 'Version of Subsonic to install'
+    description 'Your subsonic license key'
     constraint_description 'can only contain ASCII characters'
   end
 
   parameters(:subsonic_s3_bucket_name) do
     type 'String'
-    default ENV.fetch('SUBSONIC_S3_BUCKET', "#{ENV['USER']}-subsonic")
     allowed_pattern "[\\x20-\\x7E]*"
-    description 'Version of Subsonic to install'
+    description 'S3 bucket name -- must be globally unique.'
     constraint_description 'can only contain ASCII characters'
   end
 
   # Security group
   dynamic!(:security_group, 'subsonic',
            :ingress_rules => [
-             { :cidr_ip => '0.0.0.0/0', :ip_protocol => 'tcp', :from_port => '4040', :to_port => '4040' },
+             { :cidr_ip => ref!(:allow_subsonic_from), :ip_protocol => 'tcp', :from_port => '4040', :to_port => '4040' },
              { :cidr_ip => ref!(:allow_ssh_from), :ip_protocol => 'tcp', :from_port => '22', :to_port => '22' }
            ]
           )
