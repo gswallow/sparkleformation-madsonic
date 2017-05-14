@@ -1,0 +1,7 @@
+# A personal, local, persistent database.
+urlid subsonic
+url jdbc:hsqldb:file:/var/subsonic/db/subsonic.data;shutdown=true
+username SA
+password
+transiso TRANSACTION_READ_COMMITTED
+

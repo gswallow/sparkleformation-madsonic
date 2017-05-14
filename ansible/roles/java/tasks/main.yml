@@ -1,1 +1,26 @@
-- apt: name=openjdk-8-jre-headless
+- name: Add software-properties-common
+  apt:
+    name: software-properties-common
+
+- name: Add ca-certficates
+  apt:
+    name: ca-certificates
+
+- name: Add webupd8team PPA
+  apt_repository:
+    repo: "ppa:webupd8team/java"
+
+- name: Avoid prompts during java8 install
+  debconf:
+    name: "oracle-java8-installer"
+    question: "shared/accepted-oracle-license-v1-1"
+    value: "true"
+    vtype: "select"
+
+- name: install oracle jdk8
+  apt:
+    name: oracle-java8-installer
+
+- name: set default jdk
+  apt:
+    name: oracle-java8-set-default
