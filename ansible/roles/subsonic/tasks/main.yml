@@ -24,18 +24,18 @@
     state: restarted
     enabled: yes
 
-- lineinfile:
-    line: "LicenseCode={{ subsonic_license_key }}"
-    dest: '/var/subsonic/subsonic.properties'
-    regexp: '^LicenseCode'
-    insertafter: EOF
-    create: yes
-
-- lineinfile:
-    line: "LicenseEmail={{ subsonic_license_email }}"
-    dest: '/var/subsonic/subsonic.properties'
-    regexp: '^LicenseEmail'
-    insertafter: EOF
-    create: yes
-  notify:
-    - restart subsonic
+#- lineinfile:
+#    line: "LicenseCode={{ subsonic_license_key }}"
+#    dest: '/var/subsonic/subsonic.properties'
+#    regexp: '^LicenseCode'
+#    insertafter: EOF
+#    create: yes
+#
+#- lineinfile:
+#    line: "LicenseEmail={{ subsonic_license_email }}"
+#    dest: '/var/subsonic/subsonic.properties'
+#    regexp: '^LicenseEmail'
+#    insertafter: EOF
+#    create: yes
+#  notify:
+#    - restart subsonic
