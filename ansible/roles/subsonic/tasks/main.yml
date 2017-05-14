@@ -30,5 +30,12 @@
     regexp: '^LicenseCode'
     insertafter: EOF
     create: yes
+
+- lineinfile:
+    line: "LicenseEmail={{ subsonic_license_email }}"
+    dest: '/var/subsonic/subsonic.properties'
+    regexp: '^LicenseEmail'
+    insertafter: EOF
+    create: yes
   notify:
     - restart subsonic

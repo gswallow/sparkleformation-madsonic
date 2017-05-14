@@ -51,6 +51,14 @@ EOF
     constraint_description 'can only contain ASCII characters'
   end
 
+  parameters(:subsonic_license_email) do
+    type 'String'
+    default ENV.fetch('SUBSONIC_LICENSE_EMAIL', '')
+    allowed_pattern "[\\x20-\\x7E]*"
+    description 'Your subsonic license email'
+    constraint_description 'can only contain ASCII characters'
+  end
+
   parameters(:subsonic_s3_bucket_name) do
     type 'String'
     allowed_pattern "[\\x20-\\x7E]*"
