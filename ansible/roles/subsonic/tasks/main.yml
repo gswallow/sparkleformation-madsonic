@@ -12,7 +12,8 @@
     - restart subsonic
 
 - lineinfile:
-    line: "SUBSONIC_ARGS='--max-memory=150 --default-music-folder=/s3fs/subsonic/music --default-podcast-folder=/s3fs/subsonic/podcasts --default-playlist-folder=/s3fs/subsonic/playlists'"
+#    line: "SUBSONIC_ARGS='--max-memory=150 --default-music-folder=/s3fs/subsonic/music --default-podcast-folder=/s3fs/subsonic/podcasts --default-playlist-folder=/s3fs/subsonic/playlists'"
+    line: "SUBSONIC_ARGS='--max-memory=250 --default-music-folder=/s3fs/subsonic/music'"
     dest: "/etc/default/subsonic"
     regexp: '^SUBSONIC_ARGS'
   notify:
