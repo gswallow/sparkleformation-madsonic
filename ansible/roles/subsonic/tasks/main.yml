@@ -4,6 +4,26 @@
     allow_unauthenticated: yes
     state: present
 
+- name: stop subsonic
+  service:
+    name: subsonic
+    state: stopped
+    enabled: yes
+
+- name: /var/subsonic permissions
+  file:
+    path: /var/subsonic
+    owner: subsonic
+    group: subsonic
+    recurse: yes
+
+- name: /usr/share/subsonic permissions
+  file:
+    path: /usr/share/subsonic
+    owner: subsonic
+    group: subsonic
+    recurse: yes
+
 - lineinfile:
     line: "SUBSONIC_USER='subsonic'"
     dest: "/etc/default/subsonic"
@@ -12,31 +32,24 @@
     - restart subsonic
 
 - lineinfile:
-#    line: "SUBSONIC_ARGS='--max-memory=150 --default-music-folder=/s3fs/subsonic/music --default-podcast-folder=/s3fs/subsonic/podcasts --default-playlist-folder=/s3fs/subsonic/playlists'"
     line: "SUBSONIC_ARGS='--max-memory=250 --default-music-folder=/s3fs/subsonic/music'"
     dest: "/etc/default/subsonic"
     regexp: '^SUBSONIC_ARGS'
   notify:
     - restart subsonic
 
-- name: restart subsonic
-  service:
-    name: subsonic
-    state: restarted
-    enabled: yes
+- lineinfile:
+    line: "LicenseCode={{ subsonic_license_key }}"
+    dest: '/var/subsonic/subsonic.properties'
+    regexp: '^LicenseCode'
+    insertafter: EOF
+    create: yes
 
-#- lineinfile:
-#    line: "LicenseCode={{ subsonic_license_key }}"
-#    dest: '/var/subsonic/subsonic.properties'
-#    regexp: '^LicenseCode'
-#    insertafter: EOF
-#    create: yes
-#
-#- lineinfile:
-#    line: "LicenseEmail={{ subsonic_license_email }}"
-#    dest: '/var/subsonic/subsonic.properties'
-#    regexp: '^LicenseEmail'
-#    insertafter: EOF
-#    create: yes
-#  notify:
-#    - restart subsonic
+- lineinfile:
+    line: "LicenseEmail={{ subsonic_license_email }}"
+    dest: '/var/subsonic/subsonic.properties'
+    regexp: '^LicenseEmail'
+    insertafter: EOF
+    create: yes
+  notify:
+    - restart subsonic
