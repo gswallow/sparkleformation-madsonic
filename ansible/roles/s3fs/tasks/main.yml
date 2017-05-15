@@ -31,5 +31,5 @@
     path: /s3fs/subsonic
     src: "{{ s3fs_bucket_name }}:/"
     fstype: fuse.s3fs
-    opts: "_netdev,storage_class=standard_ia,iam_role={{ s3fs_iam_role }},endpoint={{ s3fs_aws_region }},allow_other,mp_umask=0022,uid={{ subsonic_user.uid }},gid={{ subsonic_group.gid }}"
+    opts: "_netdev,iam_role={{ s3fs_iam_role }},endpoint={{ s3fs_aws_region }},allow_other,mp_umask=0022,uid={{ subsonic_user.uid }},gid={{ subsonic_group.gid }}"
     state: mounted
