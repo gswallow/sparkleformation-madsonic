@@ -3,6 +3,8 @@ SparkleFormation.new(:madsonic, :provider => :aws).load(:base, :ami, :ansible, :
 Autoscaling group containing a Madsonic EC2 instance.  S3 bucket to hold media. IAM profile allowing S3 bucket access.
 EOF
 
+  ENV['BUCKET_NAME'] ||= "#{ENV.fetch('USER', ::Array.new(12) { ::Range.new('a', 'z').to_a.sample }.join)}-madsonic"
+
   parameters(:ansible_playbook_repo) do
     type 'String'
     default ENV.fetch('ansible_playbook_repo', 'https://github.com/gswallow/sparkleformation-madsonic.git')
@@ -35,14 +37,6 @@ EOF
     constraint_description 'Must follow IP/mask notation (e.g. 192.168.1.0/24)'
   end
 
-  parameters(:madsonic_version) do
-    type 'String'
-    default ENV.fetch('MADSONIC_VERSION', '6.1.1')
-    allowed_pattern "[\\x20-\\x7E]*"
-    description 'Version of Madsonic to install'
-    constraint_description 'can only contain ASCII characters'
-  end
-
   parameters(:madsonic_license_key) do
     type 'String'
     default ENV.fetch('MADSONIC_LICENSE_KEY', '')
@@ -69,6 +63,7 @@ EOF
 
   parameters(:madsonic_s3_bucket_name) do
     type 'String'
+    default ENV['BUCKET_NAME']
     allowed_pattern "[\\x20-\\x7E]*"
     description 'S3 bucket name -- must be globally unique.'
     constraint_description 'can only contain ASCII characters'

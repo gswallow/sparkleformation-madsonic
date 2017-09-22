@@ -1,4 +1,3 @@
-madsonic_version: "{{ lookup('env', 'MADSONIC_VERSION') }}"
 madsonic_license_key: "{{ lookup('env', 'MADSONIC_LICENSE_KEY') }}"
 madsonic_license_email: "{{ lookup('env', 'MADSONIC_LICENSE_EMAIL') }}"
 madsonic_redirect_from: "{{ lookup('env', 'MADSONIC_REDIRECT_FROM') }}"
