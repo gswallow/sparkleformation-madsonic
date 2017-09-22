@@ -1,13 +1,13 @@
-SfnRegistry.register(:subsonic_policy_statements) do
+SfnRegistry.register(:madsonic_policy_statements) do
   [
     {
       'Action' => %w(s3:*),
-      'Resource' => join!( join!( 'arn', 'aws', 's3', '', '', ref!(:subsonic_s3_bucket), :options => { :delimiter => ':' }), '*', :options => { :delimiter => '/' }),
+      'Resource' => join!( join!( 'arn', 'aws', 's3', '', '', ref!(:madsonic_s3_bucket), :options => { :delimiter => ':' }), '*', :options => { :delimiter => '/' }),
       'Effect' => 'Allow'
     },
     {
       'Action' =>  %w(s3:ListBucket),
-      'Resource' => join!( 'arn', 'aws', 's3', '', '', ref!(:subsonic_s3_bucket), :options => { :delimiter => ':' }),
+      'Resource' => join!( 'arn', 'aws', 's3', '', '', ref!(:madsonic_s3_bucket), :options => { :delimiter => ':' }),
       'Effect' =>  'Allow'
     },
     {

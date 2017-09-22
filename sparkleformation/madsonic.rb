@@ -1,11 +1,11 @@
-SparkleFormation.new(:subsonic, :provider => :aws).load(:base, :ami, :ansible, :ssh_key_pair).overrides do
+SparkleFormation.new(:madsonic, :provider => :aws).load(:base, :ami, :ansible, :ssh_key_pair).overrides do
   description <<-EOF
-Autoscaling group containing a Subsonic EC2 instance.  S3 bucket to hold media. IAM profile allowing S3 bucket access.
+Autoscaling group containing a Madsonic EC2 instance.  S3 bucket to hold media. IAM profile allowing S3 bucket access.
 EOF
 
   parameters(:ansible_playbook_repo) do
     type 'String'
-    default ENV.fetch('ansible_playbook_repo', 'https://github.com/gswallow/sparkleformation-subsonic.git')
+    default ENV.fetch('ansible_playbook_repo', 'https://github.com/gswallow/sparkleformation-madsonic.git')
     allowed_pattern "[\\x20-\\x7E]*"
     description 'Git repository containing ansible playbook'
     constraint_description 'can only contain ASCII characters'
@@ -27,47 +27,47 @@ EOF
     constraint_description 'Must follow IP/mask notation (e.g. 192.168.1.0/24)'
   end
   
-  parameters(:allow_subsonic_from) do
+  parameters(:allow_madsonic_from) do
     type 'String'
     allowed_pattern "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
     default '0.0.0.0/0'
-    description 'Network from which to allow Subsonic (TCP 4040).  Note the default of 0.0.0.0/0 allows global access.'
+    description 'Network from which to allow Madsonic (TCP 4040).  Note the default of 0.0.0.0/0 allows global access.'
     constraint_description 'Must follow IP/mask notation (e.g. 192.168.1.0/24)'
   end
 
-  parameters(:subsonic_version) do
+  parameters(:madsonic_version) do
     type 'String'
-    default ENV.fetch('SUBSONIC_VERSION', '6.1.1')
+    default ENV.fetch('MADSONIC_VERSION', '6.1.1')
     allowed_pattern "[\\x20-\\x7E]*"
-    description 'Version of Subsonic to install'
+    description 'Version of Madsonic to install'
     constraint_description 'can only contain ASCII characters'
   end
 
-  parameters(:subsonic_license_key) do
+  parameters(:madsonic_license_key) do
     type 'String'
-    default ENV.fetch('SUBSONIC_LICENSE_KEY', '')
+    default ENV.fetch('MADSONIC_LICENSE_KEY', '')
     allowed_pattern "[\\x20-\\x7E]*"
-    description 'Your subsonic license key'
+    description 'Your madsonic license key'
     constraint_description 'can only contain ASCII characters'
   end
 
-  parameters(:subsonic_license_email) do
+  parameters(:madsonic_license_email) do
     type 'String'
-    default ENV.fetch('SUBSONIC_LICENSE_EMAIL', '')
+    default ENV.fetch('MADSONIC_LICENSE_EMAIL', '')
     allowed_pattern "[\\x20-\\x7E]*"
-    description 'Your subsonic license email'
+    description 'Your madsonic license email'
     constraint_description 'can only contain ASCII characters'
   end
 
-  parameters(:subsonic_redirect_from) do
+  parameters(:madsonic_redirect_from) do
     type 'String'
-    default ENV.fetch('SUBSONIC_REDIRECT_FROM', ENV.fetch('USER', ''))
+    default ENV.fetch('MADSONIC_REDIRECT_FROM', ENV.fetch('USER', ''))
     allowed_pattern "[\\x20-\\x7E]*"
-    description 'Your subsonic license email'
+    description 'Your madsonic license email'
     constraint_description 'can only contain ASCII characters'
   end
 
-  parameters(:subsonic_s3_bucket_name) do
+  parameters(:madsonic_s3_bucket_name) do
     type 'String'
     allowed_pattern "[\\x20-\\x7E]*"
     description 'S3 bucket name -- must be globally unique.'
@@ -75,39 +75,39 @@ EOF
   end
 
   # Security group
-  dynamic!(:security_group, 'subsonic',
+  dynamic!(:security_group, 'madsonic',
            :ingress_rules => [
-             { :cidr_ip => ref!(:allow_subsonic_from), :ip_protocol => 'tcp', :from_port => '4040', :to_port => '4040' },
+             { :cidr_ip => ref!(:allow_madsonic_from), :ip_protocol => 'tcp', :from_port => '4040', :to_port => '4040' },
              { :cidr_ip => ref!(:allow_ssh_from), :ip_protocol => 'tcp', :from_port => '22', :to_port => '22' }
            ]
           )
 
   # S3 bucket and bucket policy allowing access to IAM roles
-  dynamic!(:bucket, 'subsonic', :bucket_name => ref!(:subsonic_s3_bucket_name))
-  dynamic!(:bucket_policy, 'subsonic')
+  dynamic!(:bucket, 'madsonic', :bucket_name => ref!(:madsonic_s3_bucket_name))
+  dynamic!(:bucket_policy, 'madsonic')
 
   # IAM roles
-  dynamic!(:iam_role, 'subsonic')
+  dynamic!(:iam_role, 'madsonic')
 
-  dynamic!(:iam_policy, 'subsonic',
-           :policy_statements => [ :subsonic_policy_statements],
-           :iam_roles => [ 'SubsonicIAMRole']
+  dynamic!(:iam_policy, 'madsonic',
+           :policy_statements => [ :madsonic_policy_statements],
+           :iam_roles => [ 'MadsonicIAMRole']
           )
 
-  dynamic!(:iam_instance_profile, 'subsonic',
-           :iam_roles => [ 'SubsonicIAMRole' ],
-           :iam_policy => 'SubsonicIAMPolicy'
+  dynamic!(:iam_instance_profile, 'madsonic',
+           :iam_roles => [ 'MadsonicIAMRole' ],
+           :iam_policy => 'MadsonicIAMPolicy'
           )
 
   # Auto scaling group
-  dynamic!(:launch_config, 'subsonic',
-           :iam_instance_profile => 'SubsonicIAMInstanceProfile',
-           :iam_role => 'SubsonicIAMRole',
-           :security_groups => _array(ref!(:subsonic_ec2_security_group)),
-           :ansible_seed => registry!(:ansible_seed, 'subsonic')
+  dynamic!(:launch_config, 'madsonic',
+           :iam_instance_profile => 'MadsonicIAMInstanceProfile',
+           :iam_role => 'MadsonicIAMRole',
+           :security_groups => _array(ref!(:madsonic_ec2_security_group)),
+           :ansible_seed => registry!(:ansible_seed, 'madsonic')
           )
 
-  dynamic!(:auto_scaling_group, 'subsonic',
-           :launch_config => :subsonic_auto_scaling_launch_configuration
+  dynamic!(:auto_scaling_group, 'madsonic',
+           :launch_config => :madsonic_auto_scaling_launch_configuration
           )
 end

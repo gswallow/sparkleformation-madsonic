@@ -1,5 +1,5 @@
-- name: restart subsonic
+- name: restart madsonic
   service:
-    name: subsonic
+    name: madsonic
     state: restarted
     enabled: yes

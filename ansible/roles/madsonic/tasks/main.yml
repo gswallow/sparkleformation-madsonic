@@ -1,0 +1,61 @@
+- name: install madsonic package
+  apt:
+    deb: "http://madsonic.org/download/6.2/20161222_madsonic-6.2.9080.deb"
+    allow_unauthenticated: yes
+    state: present
+
+- name: stop madsonic
+  service:
+    name: madsonic
+    state: stopped
+    enabled: yes
+
+- name: /var/madsonic permissions
+  file:
+    path: /var/madsonic
+    owner: madsonic
+    group: madsonic
+    recurse: yes
+
+- name: /usr/share/madsonic permissions
+  file:
+    path: /usr/share/madsonic
+    owner: madsonic
+    group: madsonic
+    recurse: yes
+
+- lineinfile:
+    line: "MADSONIC_USER='madsonic'"
+    dest: "/etc/default/madsonic"
+    regexp: '^MADSONIC_USER'
+  notify:
+    - restart madsonic
+
+- lineinfile:
+    line: "MADSONIC_ARGS='--init-memory=256 --max-memory=512 --default-music-folder=/s3fs/madsonic/music --timezone=US/Eastern'"
+    dest: "/etc/default/madsonic"
+    regexp: '^MADSONIC_ARGS'
+  notify:
+    - restart madsonic
+
+- lineinfile:
+    line: "LicenseCode={{ madsonic_license_key }}"
+    dest: '/var/madsonic/madsonic.properties'
+    regexp: '^LicenseCode'
+    insertafter: EOF
+    create: yes
+
+- lineinfile:
+    line: "LicenseEmail={{ madsonic_license_email }}"
+    dest: '/var/madsonic/madsonic.properties'
+    regexp: '^LicenseEmail'
+    insertafter: EOF
+    create: yes
+  notify:
+    - restart madsonic
+
+- cron:
+    name: "backup madsonic database"
+    minute: 0
+    hour: 2
+    job: "if [ ! -d /s3fs/madsonic/db ]; then mkdir -p /s3fs/madsonic/db ; cp -p /var/madsonic/db/madsonic.data /var/madsonic/db/madsonic.backup /s3fs/madsonic/db"
