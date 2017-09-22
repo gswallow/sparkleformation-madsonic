@@ -65,4 +65,4 @@
     name: "backup subsonic database"
     minute: 0
     hour: 2
-    job: "if [ ! -d /s3fs/db ]; then mkdir -p /s3fs/db ; cp -p /var/subsonic/db/subsonic.data /var/subsonic/db/subsonic.backup /s3fs/db"
+    job: "if [ ! -d /s3fs/subsonic/db ]; then mkdir -p /s3fs/subsonic/db ; cp -p /var/subsonic/db/subsonic.data /var/subsonic/db/subsonic.backup /s3fs/subsonic/db"

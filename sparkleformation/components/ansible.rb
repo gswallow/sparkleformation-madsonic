@@ -6,7 +6,7 @@ SparkleFormation.component(:ansible) do
 
   parameters(:ansible_inventory) do
     type 'String'
-    default ENV.fetch('ansible_inventory', 'ansible/hosts')
+    default ENV.fetch('ansible_inventory', '/tmp/hosts')
     allowed_pattern "[\\x20-\\x7E]*"
     description 'Git repository containing ansible playbook'
     constraint_description 'can only contain ASCII characters'
