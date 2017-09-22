@@ -37,7 +37,7 @@ EOF
 
   parameters(:subsonic_version) do
     type 'String'
-    default ENV.fetch('SUBSONIC_VERSION', '6.1.beta2')
+    default ENV.fetch('SUBSONIC_VERSION', '6.1.1')
     allowed_pattern "[\\x20-\\x7E]*"
     description 'Version of Subsonic to install'
     constraint_description 'can only contain ASCII characters'
@@ -54,6 +54,14 @@ EOF
   parameters(:subsonic_license_email) do
     type 'String'
     default ENV.fetch('SUBSONIC_LICENSE_EMAIL', '')
+    allowed_pattern "[\\x20-\\x7E]*"
+    description 'Your subsonic license email'
+    constraint_description 'can only contain ASCII characters'
+  end
+
+  parameters(:subsonic_redirect_from) do
+    type 'String'
+    default ENV.fetch('SUBSONIC_REDIRECT_FROM', ENV.fetch('USER', ''))
     allowed_pattern "[\\x20-\\x7E]*"
     description 'Your subsonic license email'
     constraint_description 'can only contain ASCII characters'

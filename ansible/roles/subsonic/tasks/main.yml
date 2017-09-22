@@ -46,6 +46,13 @@
     create: yes
 
 - lineinfile:
+    line: "UrlRedirectFrom={{ subsonic_redirect_from }}"
+    dest: "/var/subsonic/subsonic.properties"
+    regexp: "^UrlRedirectFrom"
+    insertafter: EOF
+    create: yes
+
+- lineinfile:
     line: "LicenseEmail={{ subsonic_license_email }}"
     dest: '/var/subsonic/subsonic.properties'
     regexp: '^LicenseEmail'
@@ -53,3 +60,9 @@
     create: yes
   notify:
     - restart subsonic
+
+- cron:
+    name: "backup subsonic database"
+    minute: 0
+    hour: 2
+    job: "if [ ! -d /s3fs/db ]; then mkdir -p /s3fs/db ; cp -p /var/subsonic/db/subsonic.data /var/subsonic/db/subsonic.backup /s3fs/db"

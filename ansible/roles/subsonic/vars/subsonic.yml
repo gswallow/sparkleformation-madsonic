@@ -1,3 +1,4 @@
 subsonic_version: "{{ lookup('env', 'SUBSONIC_VERSION') }}"
 subsonic_license_key: "{{ lookup('env', 'SUBSONIC_LICENSE_KEY') }}"
 subsonic_license_email: "{{ lookup('env', 'SUBSONIC_LICENSE_EMAIL') }}"
+subsonic_redirect_from: "{{ lookup('env', 'SUBSONIC_REDIRECT_FROM') }}"

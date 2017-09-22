@@ -4,6 +4,7 @@
     subsonic_version:  "{{ lookup('env', 'SUBSONIC_VERSION') }}"
     subsonic_license_key: "{{ lookup('env', 'SUBSONIC_LICENSE_KEY') }}"
     subsonic_license_email: "{{ lookup('env', 'SUBSONIC_LICENSE_EMAIL') }}"
+    subsonic_redirect_from: "{{ lookup('env', 'SUBSONIC_REDIRECT_FROM') }}"
     s3fs_bucket_name: "{{ lookup('env', 'S3FS_BUCKET_NAME') }}"
     s3fs_aws_region: "{{ lookup('env', 'S3FS_AWS_REGION') }}"
     s3fs_iam_role: "{{ lookup('env', 'S3FS_IAM_ROLE') }}"
