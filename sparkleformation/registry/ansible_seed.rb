@@ -8,6 +8,7 @@ SfnRegistry.register(:ansible_seed) do |_name, _config = {}|
     'S3FS_BUCKET_NAME'                => ref!(:madsonic_s3_bucket_name),
     'S3FS_AWS_REGION'                 => region!,
     'S3FS_IAM_ROLE'                   => ref!(:madsonic_i_a_m_role),
-    'HOSTGROUP'                       => 'default'
+    'HOSTGROUP'                       => 'default',
+    'DISABLE_TERMINATION'             => ref!(:disable_termination_on_success)
   }
 end
